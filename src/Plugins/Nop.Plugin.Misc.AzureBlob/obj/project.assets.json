@@ -12837,11 +12837,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Misc.AzureBlob\\Nop.Plugin.Misc.AzureBlob.csproj",
+      "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Misc.AzureBlob\\Nop.Plugin.Misc.AzureBlob.csproj",
       "projectName": "Nop.Plugin.Misc.AzureBlob",
-      "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Misc.AzureBlob\\Nop.Plugin.Misc.AzureBlob.csproj",
+      "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Misc.AzureBlob\\Nop.Plugin.Misc.AzureBlob.csproj",
       "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-      "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Misc.AzureBlob\\obj\\",
+      "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Misc.AzureBlob\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -12862,8 +12862,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj": {
-              "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj"
+            "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj": {
+              "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj"
             }
           }
         }

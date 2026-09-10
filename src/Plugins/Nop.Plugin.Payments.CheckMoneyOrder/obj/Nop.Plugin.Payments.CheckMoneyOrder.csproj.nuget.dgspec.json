@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\Nop.Plugin.Payments.CheckMoneyOrder.csproj": {}
+    "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\Nop.Plugin.Payments.CheckMoneyOrder.csproj": {}
   },
   "projects": {
-    "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
+    "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
       "version": "4.90.0",
       "restore": {
-        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj",
+        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj",
         "projectName": "Nop.Core",
-        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj",
+        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj",
         "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\obj\\",
+        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -121,14 +121,14 @@
         }
       }
     },
-    "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj": {
+    "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj": {
       "version": "4.90.0",
       "restore": {
-        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj",
+        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj",
         "projectName": "Nop.Data",
-        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj",
+        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj",
         "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\obj\\",
+        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -149,8 +149,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj"
               }
             }
           }
@@ -230,14 +230,14 @@
         }
       }
     },
-    "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Services\\Nop.Services.csproj": {
+    "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Services\\Nop.Services.csproj": {
       "version": "4.90.0",
       "restore": {
-        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Services\\Nop.Services.csproj",
+        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Services\\Nop.Services.csproj",
         "projectName": "Nop.Services",
-        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Services\\Nop.Services.csproj",
+        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Services\\Nop.Services.csproj",
         "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Services\\obj\\",
+        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -258,11 +258,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj"
               },
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj"
               }
             }
           }
@@ -358,14 +358,14 @@
         }
       }
     },
-    "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\Nop.Plugin.Payments.CheckMoneyOrder.csproj": {
+    "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\Nop.Plugin.Payments.CheckMoneyOrder.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\Nop.Plugin.Payments.CheckMoneyOrder.csproj",
+        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\Nop.Plugin.Payments.CheckMoneyOrder.csproj",
         "projectName": "Nop.Plugin.Payments.CheckMoneyOrder",
-        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\Nop.Plugin.Payments.CheckMoneyOrder.csproj",
+        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\Nop.Plugin.Payments.CheckMoneyOrder.csproj",
         "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\obj\\",
+        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Payments.CheckMoneyOrder\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -386,8 +386,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web\\Nop.Web.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web\\Nop.Web.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web\\Nop.Web.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web\\Nop.Web.csproj"
               }
             }
           }
@@ -433,14 +433,14 @@
         }
       }
     },
-    "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj": {
+    "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj": {
       "version": "4.90.0",
       "restore": {
-        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj",
+        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj",
         "projectName": "Nop.Web.Framework",
-        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj",
+        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj",
         "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\obj\\",
+        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -461,14 +461,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj"
               },
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj"
               },
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Services\\Nop.Services.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Services\\Nop.Services.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Services\\Nop.Services.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Services\\Nop.Services.csproj"
               }
             }
           }
@@ -540,14 +540,14 @@
         }
       }
     },
-    "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web\\Nop.Web.csproj": {
+    "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web\\Nop.Web.csproj": {
       "version": "4.90.0",
       "restore": {
-        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web\\Nop.Web.csproj",
+        "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web\\Nop.Web.csproj",
         "projectName": "Nop.Web",
-        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web\\Nop.Web.csproj",
+        "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web\\Nop.Web.csproj",
         "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web\\obj\\",
+        "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -568,17 +568,17 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj"
               },
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Data\\Nop.Data.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj"
               },
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Services\\Nop.Services.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Services\\Nop.Services.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Services\\Nop.Services.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Services\\Nop.Services.csproj"
               },
-              "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj": {
-                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj"
+              "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj": {
+                "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj"
               }
             }
           }

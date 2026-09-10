@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bcbB13KPljU=",
+  "dgSpecHash": "TqXfVrL/05Q=",
   "success": true,
-  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj",
+  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web.Framework\\Nop.Web.Framework.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tharindu\\.nuget\\packages\\advancedstringbuilder\\0.1.1\\advancedstringbuilder.0.1.1.nupkg.sha512",
     "C:\\Users\\Tharindu\\.nuget\\packages\\autofac\\8.1.0\\autofac.8.1.0.nupkg.sha512",

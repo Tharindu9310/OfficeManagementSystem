@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Zahojs0iLTc=",
+  "dgSpecHash": "4jJj1lsWAaI=",
   "success": true,
-  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Tests\\Nop.Tests\\Nop.Tests.csproj",
+  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Tests\\Nop.Tests\\Nop.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tharindu\\.nuget\\packages\\advancedstringbuilder\\0.1.1\\advancedstringbuilder.0.1.1.nupkg.sha512",
     "C:\\Users\\Tharindu\\.nuget\\packages\\autofac\\8.1.0\\autofac.8.1.0.nupkg.sha512",

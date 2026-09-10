@@ -5422,11 +5422,11 @@
   "project": {
     "version": "4.90.0",
     "restore": {
-      "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj",
+      "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj",
       "projectName": "Nop.Core",
-      "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\Nop.Core.csproj",
+      "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\Nop.Core.csproj",
       "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-      "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Libraries\\Nop.Core\\obj\\",
+      "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

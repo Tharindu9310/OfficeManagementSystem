@@ -14556,11 +14556,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Misc.Brevo\\Nop.Plugin.Misc.Brevo.csproj",
+      "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Misc.Brevo\\Nop.Plugin.Misc.Brevo.csproj",
       "projectName": "Nop.Plugin.Misc.Brevo",
-      "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Misc.Brevo\\Nop.Plugin.Misc.Brevo.csproj",
+      "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Misc.Brevo\\Nop.Plugin.Misc.Brevo.csproj",
       "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-      "outputPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Misc.Brevo\\obj\\",
+      "outputPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Misc.Brevo\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -14581,8 +14581,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web\\Nop.Web.csproj": {
-              "projectPath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Presentation\\Nop.Web\\Nop.Web.csproj"
+            "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web\\Nop.Web.csproj": {
+              "projectPath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Presentation\\Nop.Web\\Nop.Web.csproj"
             }
           }
         }

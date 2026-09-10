@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2QEXCFI+4pA=",
+  "dgSpecHash": "Mr59TgY75TM=",
   "success": true,
-  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagementsystem\\src\\Plugins\\Nop.Plugin.Widgets.GoogleAnalytics\\Nop.Plugin.Widgets.GoogleAnalytics.csproj",
+  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Widgets.GoogleAnalytics\\Nop.Plugin.Widgets.GoogleAnalytics.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tharindu\\.nuget\\packages\\advancedstringbuilder\\0.1.1\\advancedstringbuilder.0.1.1.nupkg.sha512",
     "C:\\Users\\Tharindu\\.nuget\\packages\\autofac\\8.1.0\\autofac.8.1.0.nupkg.sha512",
