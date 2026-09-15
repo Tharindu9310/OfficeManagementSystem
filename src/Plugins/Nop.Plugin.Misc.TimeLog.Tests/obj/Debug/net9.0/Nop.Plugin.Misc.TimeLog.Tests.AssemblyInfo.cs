@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright © OfficeManagement")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("xUnit tests for Nop.Plugin.Misc.TimeLog business logic (TT-017)")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf08437ca625929ec76190e1b35441d7dd4fb411")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5073ca2f344f83ed36fb63eedc02b76ff97d3112")]
 [assembly: System.Reflection.AssemblyProductAttribute("Nop.Plugin.Misc.TimeLog.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Nop.Plugin.Misc.TimeLog.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

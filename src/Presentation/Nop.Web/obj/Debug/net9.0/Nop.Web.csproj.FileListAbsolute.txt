@@ -3716,3 +3716,4 @@ C:\Tharindu\Project\OfficeManagement\src\Presentation\Nop.Web\obj\Debug\net9.0\N
 C:\Tharindu\Project\OfficeManagement\src\Presentation\Nop.Web\obj\Debug\net9.0\Nop.Web.genruntimeconfig.cache
 C:\Tharindu\Project\OfficeManagement\src\Presentation\Nop.Web\obj\Debug\net9.0\ref\Nop.Web.dll
 C:\Tharindu\Project\OfficeManagement\src\Presentation\Nop.Web\obj\Debug\net9.0\compressed\j08u57d2fc-29r0kiek0c.gz
+C:\Tharindu\Project\OfficeManagement\src\Presentation\Nop.Web\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
