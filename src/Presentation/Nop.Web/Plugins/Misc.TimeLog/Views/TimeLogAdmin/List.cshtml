@@ -1,0 +1,172 @@
+@model TimeLogAdminSearchModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Admin.TimeLog.Menu.TimeLogAll").Text;
+    NopHtml.SetActiveMenuItemSystemName(NopTimeLogDefaults.TimeLogAllAdminMenuSystemName);
+}
+
+@*
+    TT-014 - manager oversight grid. Fully read-only end-to-end, matching TimeLogAdminController
+    (Nop.Plugin.Misc.TimeLog/Controllers/TimeLogAdminController.cs) having zero mutating actions:
+    no UrlUpdate/UrlDelete is set on the DataTablesModel below (so the framework never generates
+    editData_/confirmEditData_/table_deletedata_ functions for this grid at all), no checkbox column,
+    no "Add" form, and no Submit button - there is no client-side edit/delete/submit affordance
+    rendered anywhere on this page, not merely a server-side block on a hidden control.
+*@
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.TimeLog.Menu.TimeLogAll")
+    </h1>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row opened">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-up" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="DateFrom" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="DateFrom" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="DateTo" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="DateTo" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="CustomerId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="CustomerId" asp-items="Model.AvailableCustomers" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    @*CR-002: this grid only ever shows Submitted records now (per user
+                                      request) - the Status filter is meaningless with a single possible
+                                      value, so it's removed from the search panel entirely rather than
+                                      left as a disabled/no-op control.*@
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="ProjectId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="ProjectId" asp-items="Model.AvailableProjects" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-timelog-all" class="btn btn-primary btn-search">
+                                        <i class="fas fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @*No UrlUpdate, no UrlDelete: this is what makes the grid read-only by omission of
+                          code at the framework level, not merely by hiding buttons with CSS.*@
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "timelog-all-grid",
+                            UrlRead = new DataUrl("TimeLogList", "TimeLogAdmin", null),
+                            SearchButtonId = "search-timelog-all",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            //CR-002: StatusId removed from the posted filters - this grid is now
+                            //permanently scoped to Submitted records server-side (TimeLogAdminController),
+                            //so there is nothing left for a Status filter to vary.
+                            Filters = new List<FilterParameter>
+                            {
+                                new(nameof(Model.DateFrom)),
+                                new(nameof(Model.DateTo)),
+                                new(nameof(Model.ProjectId)),
+                                new(nameof(Model.CustomerId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new(nameof(TimeLogAdminModel.Date))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Date").Text,
+                                    Width = "120",
+                                    //ENH-012: same fix/pattern as ENH-006's self-service grid Date column -
+                                    //date-only display (renderDateColumnAdmin strips the time-of-day portion
+                                    //the server's ISO-formatted DateTime otherwise carries) and explicit left
+                                    //alignment. This grid is read-only (T-012, no UrlUpdate/UrlDelete), so
+                                    //unlike ENH-006/ENH-009 there is no inline-edit-mode input to consider here.
+                                    ClassName = "text-left",
+                                    Render = new RenderCustom("renderDateColumnAdmin")
+                                },
+                                new(nameof(TimeLogAdminModel.CustomerName))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Customer").Text,
+                                    Width = "200"
+                                },
+                                new(nameof(TimeLogAdminModel.ProjectName))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Project").Text,
+                                    Width = "180"
+                                },
+                                new(nameof(TimeLogAdminModel.Task))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Task").Text,
+                                    Width = "160"
+                                },
+                                new(nameof(TimeLogAdminModel.Description))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Description").Text
+                                },
+                                new(nameof(TimeLogAdminModel.TimeDisplay))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Time").Text,
+                                    Width = "100"
+                                },
+                                new(nameof(TimeLogAdminModel.StatusName))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Status").Text,
+                                    Width = "110"
+                                }
+                            }
+                        })
+
+                        <script>
+                            //ENH-012: mirrors renderDateColumn from Views/TimeLog/List.cshtml (ENH-006) -
+                            //named distinctly (renderDateColumnAdmin) since this grid is a separate DataTables
+                            //instance (timelog-all-grid) with its own global-scope render callback.
+                            function renderDateColumnAdmin(data, type, row, meta) {
+                                var raw = row.Date || '';
+                                var datePart = String(raw).split('T')[0];
+                                return escapeHtml(datePart);
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

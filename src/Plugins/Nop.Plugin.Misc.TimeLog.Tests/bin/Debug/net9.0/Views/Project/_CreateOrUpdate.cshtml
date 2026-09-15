@@ -1,0 +1,125 @@
+@model ProjectModel
+
+@*
+    T-019/T-022/TT-040 - shared Create/Edit form. Per requirements §6 Decision 1, this same form
+    (via the Edit action) doubles as the project "details" view - there is no separate read-only
+    screen. Required fields are visually marked (nop-required, matching this codebase's asterisk
+    convention elsewhere).
+*@
+
+@{
+    //nop-card requires asp-hide-block-attribute-name to always be set (its tag helper reads it
+    //unconditionally, with no ContainsName guard) - per-admin collapse state persisted the same
+    //way core admin views do it (see e.g. Areas/Admin/Views/Discount/_CreateOrUpdate.cshtml)
+    const string hideProjectInfoBlockAttributeName = "ProjectPage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideProjectInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProjectInfoBlockAttributeName);
+
+    const string hideProjectStaffBlockAttributeName = "ProjectPage.HideStaffBlock";
+    var hideProjectStaffBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProjectStaffBlockAttributeName);
+
+    const string hideProjectMappingsBlockAttributeName = "ProjectPage.HideMappingsBlock";
+    var hideProjectMappingsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProjectMappingsBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <nop-cards id="project-cards">
+                <nop-card asp-name="project-info" asp-icon="fas fa-info" asp-title="@T("Admin.TimeLog.Project.Fields.Name")" asp-hide-block-attribute-name="@hideProjectInfoBlockAttributeName" asp-hide="@hideProjectInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Name" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group input-group-required">
+                                    <nop-editor asp-for="Name" />
+                                    <nop-required />
+                                </div>
+                                <span asp-validation-for="Name"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StartDate" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group input-group-required">
+                                    <nop-editor asp-for="StartDate" />
+                                    <nop-required />
+                                </div>
+                                <span asp-validation-for="StartDate"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EndDate" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EndDate" />
+                                <span asp-validation-for="EndDate"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StatusId" />
+                            </div>
+                            <div class="col-md-9" id="project-status-field">
+                                <nop-select asp-for="StatusId" asp-items="Model.AvailableStatuses" asp-required="true" />
+                                <span asp-validation-for="StatusId"></span>
+                            </div>
+                        </div>
+                        <style>
+                            /*CR-004: width reduced via the select2-blue wrapper div itself (not an inline
+                            style on the <select>, which select2 does not reliably re-measure once it has
+                            replaced the element with its own .select2-container) - scoped to this field only
+                            via the parent id, so no other admin dropdown on this page or elsewhere is affected*/
+                            #project-status-field .select2-blue {
+                                width: 98%;
+                            }
+                        </style>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Description" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="Description" />
+                                <span asp-validation-for="Description"></span>
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="project-staff" asp-icon="fas fa-users" asp-title="@T("Admin.TimeLog.Project.Fields.AssignedStaff")" asp-hide-block-attribute-name="@hideProjectStaffBlockAttributeName" asp-hide="@hideProjectStaffBlock" asp-advanced="false">
+                    <div class="card-body">
+                        @await Html.PartialAsync("~/Plugins/Misc.TimeLog/Views/Project/_ProjectStaffPicker.cshtml", Model)
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="project-mappings" asp-icon="fas fa-bookmark" asp-title="@T("Admin.Common.Store")" asp-hide-block-attribute-name="@hideProjectMappingsBlockAttributeName" asp-hide="@hideProjectMappingsBlock" asp-advanced="true">
+                    <div class="card-body">
+                        <div class="form-group advanced-setting row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SelectedStoreIds" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                                <script>
+                                    $(function () {
+                                        $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                            closeOnSelect: false
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+            </nop-cards>
+        </div>
+    </div>
+</section>

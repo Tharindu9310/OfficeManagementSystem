@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HB0Auq+tvdE=",
+  "dgSpecHash": "2r0JIkw/nms=",
   "success": true,
-  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Libraries\\Nop.Data\\Nop.Data.csproj",
+  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagement\\src\\Libraries\\Nop.Data\\Nop.Data.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tharindu\\.nuget\\packages\\autofac\\8.1.0\\autofac.8.1.0.nupkg.sha512",
     "C:\\Users\\Tharindu\\.nuget\\packages\\autofac.extensions.dependencyinjection\\10.0.0\\autofac.extensions.dependencyinjection.10.0.0.nupkg.sha512",

@@ -1,0 +1,138 @@
+@model ProjectSearchModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Admin.TimeLog.Menu.Project").Text;
+    NopHtml.SetActiveMenuItemSystemName(NopTimeLogDefaults.ProjectAdminMenuSystemName);
+}
+
+@*
+    T-018/TT-034 - Project List grid. Store-scoped, paged (NopTimeLogDefaults.MaxPageSize clamp
+    applied server-side in ProjectController.ProjectList). Null EndDate renders as "-" (AC-P2-2.2),
+    not an error/default date. AssignedStaffCount is a plain numeric column, per the locked decision
+    in requirements §7 (no drill-down).
+*@
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.TimeLog.Menu.Project")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.TimeLog.Project.List.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row opened">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-up" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchName" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-projects" class="btn btn-primary btn-search">
+                                        <i class="fas fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "projects-grid",
+                            UrlRead = new DataUrl("ProjectList", "Project", null),
+                            SearchButtonId = "search-projects",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new(nameof(Model.SearchName))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new(nameof(ProjectModel.Name))
+                                {
+                                    Title = T("Admin.TimeLog.Project.List.Name").Text
+                                },
+                                new(nameof(ProjectModel.StartDate))
+                                {
+                                    Title = T("Admin.TimeLog.Project.List.StartDate").Text,
+                                    Width = "120",
+                                    ClassName = "text-left",
+                                    Render = new RenderCustom("renderProjectDateColumn")
+                                },
+                                new(nameof(ProjectModel.EndDate))
+                                {
+                                    Title = T("Admin.TimeLog.Project.List.EndDate").Text,
+                                    Width = "120",
+                                    ClassName = "text-left",
+                                    Render = new RenderCustom("renderProjectEndDateColumn")
+                                },
+                                new(nameof(ProjectModel.StatusName))
+                                {
+                                    Title = T("Admin.TimeLog.Project.List.Status").Text,
+                                    Width = "130"
+                                },
+                                new(nameof(ProjectModel.AssignedStaffCount))
+                                {
+                                    Title = T("Admin.TimeLog.Project.List.AssignedStaffCount").Text,
+                                    Width = "100"
+                                },
+                                new(nameof(ProjectModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Project/Edit"))
+                                }
+                            }
+                        })
+
+                        <script>
+                            //T-018/AC-P2-2: null EndDate renders as "-" (open-ended/ongoing), never an error or default date
+                            function renderProjectDateColumn(data, type, row, meta) {
+                                var raw = row.StartDate || '';
+                                var datePart = String(raw).split('T')[0];
+                                return escapeHtml(datePart);
+                            }
+
+                            function renderProjectEndDateColumn(data, type, row, meta) {
+                                if (!row.EndDate) {
+                                    return '-';
+                                }
+                                var datePart = String(row.EndDate).split('T')[0];
+                                return escapeHtml(datePart);
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

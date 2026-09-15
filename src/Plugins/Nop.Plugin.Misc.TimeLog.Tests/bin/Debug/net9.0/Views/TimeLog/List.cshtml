@@ -1,0 +1,502 @@
+@model TimeLogSearchModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Admin.TimeLog.Menu.LogTime").Text;
+    NopHtml.SetActiveMenuItemSystemName(NopTimeLogDefaults.LogTimeAdminMenuSystemName);
+
+    NopHtml.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Misc.TimeLog/Content/timelog-grid.js");
+
+    //BUG-003: the collapse/expand click on a ".search-row" (wired globally in admin.common.js -
+    //ToggleSearchBlockAndSavePreferences) reads the row's "data-hideAttribute" attribute and posts it as
+    //the generic-attribute "name" to Preferences/SavePreference, which does
+    //ArgumentException.ThrowIfNullOrEmpty(name) - confirmed against Nop.Web's own
+    //Areas/Admin/Views/Order/List.cshtml, which always sets this attribute on its search-row. This view's
+    //search-row (and, per ENH-002, the Add Time Entry panel's own row) were missing it entirely, so
+    //collapsing either panel posted name=null/undefined and threw. Both panels now carry a real attribute
+    //name and persist their collapsed state exactly like the Order grid does.
+    const string hideSearchBlockAttributeName = "TimeLogPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+
+    const string hideAddPanelAttributeName = "TimeLogPage.HideAddPanel";
+    var hideAddPanel = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAddPanelAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.TimeLog.Menu.LogTime")
+    </h1>
+    <div class="float-right">
+        <button type="button" id="submit-selected" class="btn btn-primary" disabled="disabled">
+            <i class="far fa-paper-plane"></i>
+            @T("Admin.TimeLog.Submit.Button")
+        </button>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body" @(!hideSearchBlock ? null : Html.Raw("style=\"display:none\""))>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="DateFrom" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            @* ENH-001: DateFrom/DateTo now carry [UIHint("DateNullable")] (see
+                                               TimeLogSearchModel) so nop-editor renders the same date-only
+                                               (type="date") picker as Order's StartDate/EndDate search filters,
+                                               instead of the default datetime-local editor template. *@
+                                            <nop-editor asp-for="DateFrom" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="DateTo" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="DateTo" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="StatusId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="StatusId" asp-items="Model.AvailableStatuses" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="ProjectId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="ProjectId" asp-items="Model.AvailableProjects" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-timelog" class="btn btn-primary btn-search">
+                                        <i class="fas fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        @* ENH-002: reuses the exact same search-row/search-body collapse mechanism as the
+                           Search panel above (ToggleSearchBlockAndSavePreferences, wired globally in
+                           admin.common.js against ".row.search-row") rather than a second collapse
+                           implementation - each panel just needs its own data-hideAttribute name. *@
+                        <div class="row search-row @(!hideAddPanel ? "opened" : "")" data-hideAttribute="@hideAddPanelAttributeName">
+                            <div class="search-text">@T("Admin.TimeLog.AddNew")</div>
+                            @* ENH-010: icon before the panel header text, matching the Search panel's
+                               icon-search positioning class above (a layout class, not tied to any specific
+                               glyph - reused here with fa-plus instead of fa-search) *@
+                            <div class="icon-search"><i class="fas fa-plus" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideAddPanel ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body" @(!hideAddPanel ? null : Html.Raw("style=\"display:none\""))>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="control-label">@T("Admin.TimeLog.Fields.Project")</label>
+                                </div>
+                                <div class="col-md-9">
+                                    @*ENH-005: required-field marker uses the same input-group-required +
+                                      nop-required convention used elsewhere in this admin area (e.g.
+                                      Customer/_CreateOrUpdate.Info.cshtml's SelectedCustomerRoleIds) -
+                                      these are plain HTML inputs (not tag-helper bound), so the wrapper is
+                                      applied by hand rather than via nop-editor's asp-required flag.*@
+                                    <div class="input-group input-group-required">
+                                        <select id="addProjectId" class="form-control">
+                                            @foreach (var project in Model.AvailableProjects.Where(p => p.Value != "0"))
+                                            {
+                                                <option value="@project.Value">@project.Text</option>
+                                            }
+                                        </select>
+                                        <div class="input-group-btn">
+                                            <nop-required />
+                                        </div>
+                                    </div>
+                                    <div class="field-validation-error" id="addProjectId-error"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="control-label">@T("Admin.TimeLog.Fields.Task")</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group input-group-required">
+                                        <input type="text" id="addTask" class="form-control" />
+                                        <div class="input-group-btn">
+                                            <nop-required />
+                                        </div>
+                                    </div>
+                                    <div class="field-validation-error" id="addTask-error"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="control-label">@T("Admin.TimeLog.Fields.Description")</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" id="addDescription" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="control-label">@T("Admin.TimeLog.Fields.Date")</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group input-group-required">
+                                        <input type="date" id="addDate" class="form-control" />
+                                        <div class="input-group-btn">
+                                            <nop-required />
+                                        </div>
+                                    </div>
+                                    <div class="field-validation-error" id="addDate-error"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="control-label">@T("Admin.TimeLog.Fields.Time")</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group input-group-required">
+                                        <input type="text" id="addTimeDisplay" class="form-control" placeholder="HH:mm" maxlength="5" autocomplete="off" />
+                                        <div class="input-group-btn">
+                                            <nop-required />
+                                        </div>
+                                    </div>
+                                    <div class="field-validation-error" id="addTimeDisplay-error"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-9 offset-md-3">
+                                    <button type="button" id="addTimeLog" class="btn btn-primary">@T("Admin.TimeLog.AddNew")</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "timelog-grid",
+                            UrlRead = new DataUrl("TimeLogList", "TimeLog", null),
+                            UrlUpdate = new DataUrl("TimeLogUpdate", "TimeLog", null),
+                            UrlDelete = new DataUrl("TimeLogDelete", "TimeLog", null),
+                            SearchButtonId = "search-timelog",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new(nameof(Model.DateFrom)),
+                                new(nameof(Model.DateTo)),
+                                new(nameof(Model.StatusId)),
+                                new(nameof(Model.ProjectId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new(nameof(TimeLogModel.Selectable))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCustom("renderSelectCheckbox"),
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Width = "40"
+                                },
+                                new(nameof(TimeLogModel.Date))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Date").Text,
+                                    Width = "120",
+                                    //ENH-006: date-only display (renderDateColumn strips the time-of-day
+                                    //portion the server's ISO-formatted DateTime otherwise carries) and
+                                    //explicit left alignment - this column had neither before, so it fell
+                                    //back to whatever the browser/DataTables default rendered.
+                                    ClassName = "text-left",
+                                    Render = new RenderCustom("renderDateColumn"),
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new(nameof(TimeLogModel.ProjectName))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Project").Text,
+                                    Width = "180",
+                                    Render = new RenderCustom("renderProjectColumn")
+                                },
+                                new(nameof(TimeLogModel.Task))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Task").Text,
+                                    Width = "160",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new(nameof(TimeLogModel.Description))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Description").Text,
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new(nameof(TimeLogModel.TimeDisplay))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Time").Text,
+                                    Width = "100",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new(nameof(TimeLogModel.StatusName))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Status").Text,
+                                    Width = "110"
+                                },
+                                //ENH-008: Edit and Delete combined into a single icon-only Actions column
+                                //(no text labels - just the same Font Awesome classes, fa-pencil/fa-trash-can,
+                                //already used elsewhere in this grid/plugin) instead of two separate
+                                //button-per-column entries.
+                                new(nameof(TimeLogModel.Id))
+                                {
+                                    Title = T("Admin.TimeLog.Fields.Actions").Text,
+                                    Width = "90",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderActionsColumn")
+                                }
+                            }
+                        })
+
+                        <script>
+                            //server-supplied active projects for the always-visible inline Project dropdown
+                            //(rendered per Draft row) - never hardcoded, sourced from IProjectService.GetAllActiveProjectsAsync()
+                            //via TimeLogSearchModel.AvailableProjects (the "All" placeholder entry is excluded here)
+                            var timeLogAvailableProjects = [
+                                @foreach (var project in Model.AvailableProjects.Where(p => p.Value != "0"))
+                                {
+                                    <text>{ value: '@project.Value', text: '@Html.Raw(Html.Encode(project.Text).Replace("'", "\\'"))' },</text>
+                                }
+                            ];
+
+                            function renderSelectCheckbox(data, type, row, meta) {
+                                if (row.Selectable) {
+                                    return '<input name="selectedIds" value="' + row.Id + '" type="checkbox" class="checkboxGroups" />';
+                                }
+                                return '<input type="checkbox" disabled="disabled" />';
+                            }
+
+                            function renderProjectColumn(data, type, row, meta) {
+                                if (!row.CanEdit) {
+                                    return escapeHtml(row.ProjectName || '');
+                                }
+
+                                var options = timeLogAvailableProjects.map(function (p) {
+                                    var selected = (String(p.value) === String(row.ProjectId)) ? ' selected' : '';
+                                    return '<option value="' + p.value + '"' + selected + '>' + p.text + '</option>';
+                                }).join('');
+
+                                var rowJson = escapeQuotHtml(JSON.stringify(row));
+
+                                //BUG-006 (follow-up): Project is rendered disabled by default, matching every
+                                //other column's edit-pencil-gated behavior. It has no native Editable EditType
+                                //(ENH-007), so timelog-grid.js's editData_timelog_grid wrapper explicitly
+                                //enables this specific <select> when the row enters edit mode, and its
+                                //cancelEditData_timelog_grid wrapper re-disables it on Cancel. Confirm/Update
+                                //doesn't need a matching re-disable step - a successful update redraws the
+                                //grid from fresh server data, so this markup (disabled) is re-emitted anyway.
+                                //
+                                //CHANGE REQUEST (post-TT-005/AC-4): no onchange handler any more - a Project
+                                //change is only posted when the user explicitly clicks the Update (checkmark)
+                                //button, same as every other field. BUG-004's ajaxPrefilter still picks up
+                                //whatever the select's value is at that moment.
+                                return '<select class="form-control" disabled data-row="' + rowJson + '" data-update-url="@Url.Action("TimeLogUpdate", "TimeLog")">' + options + '</select>';
+                            }
+
+                            function renderDateColumn(data, type, row, meta) {
+                                //ENH-006: strip the time-of-day portion of the server's ISO DateTime string
+                                //(e.g. "2024-01-05T00:00:00") down to just the date part - this column has no
+                                //time component to show, and the raw value included a misleading "T00:00:00".
+                                var raw = row.Date || '';
+                                var datePart = String(raw).split('T')[0];
+                                return escapeHtml(datePart);
+                            }
+
+                            function renderActionsColumn(data, type, row, meta) {
+                                //ENH-008: Edit + Delete combined into one icon-only Actions column (Font
+                                //Awesome classes only, no button text) instead of two separate button columns.
+                                if (!row.CanEdit && !row.CanDelete) {
+                                    return '';
+                                }
+
+                                var origData = data;
+                                var modData = String(data).replace(/[.*+?^${}()|[\]\\]/g, "_");
+                                var html = '';
+
+                                if (row.CanEdit) {
+                                    //BUG-005: nameData (the 3rd arg to confirmEditData_timelog_grid) MUST be
+                                    //the primary-key field name ('Id'), not a data column name. Core's
+                                    //updateRowData_ function in Areas/Admin/Views/Shared/Table.cshtml builds
+                                    //its POST body as postData[nameData] = origData (the row's Id value) THEN
+                                    //iterates every Editable column and does postData[element.Data] = <that
+                                    //cell's current input value>, in array order, writing each key onto the
+                                    //same postData object as it goes. This previously passed 'Date' here
+                                    //instead of 'Id' - since Date is itself one of the Editable columns below,
+                                    //that later loop iteration overwrote postData.Date (which briefly held
+                                    //the row's Id) with the actual edited date text, and no 'Id' key was ever
+                                    //produced in the request at all. TimeLogController.TimeLogUpdate
+                                    //model-binds TimeLogModel.Id from that (now-absent) field, so it always
+                                    //received Id == 0, which GetOwnTimeLogByIdAsync(0, customerId) can never
+                                    //find - hence "The record was not found or does not belong to you" for
+                                    //every row, even ones the user genuinely owns. Root cause confirmed by
+                                    //reading updateRowData_timelog_grid's postData-building loop end-to-end;
+                                    //unrelated to BUG-004's ajaxPrefilter (which only ever appends a
+                                    //&ProjectId=... suffix to the already-built query string and never
+                                    //touches Id/Date at all).
+                                    html += '<a href="#" class="btn btn-default" id="buttonEdit_timelog_grid' + modData + '" title="@T("Admin.Common.Edit")" onclick="editData_timelog_grid($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fas fa-pencil"></i></a>' +
+                                        '<a href="#" class="btn btn-default" id="buttonConfirm_timelog_grid' + modData + '" style="display:none" title="@T("Admin.Common.Update")" onclick="confirmEditData_timelog_grid($(this).parent().parent(), \'' + origData + '\', \'Id\');return false;"><i class="fas fa-check"></i></a>' +
+                                        '<a href="#" class="btn btn-default" id="buttonCancel_timelog_grid' + modData + '" style="display:none" title="@T("Admin.Common.Cancel")" onclick="cancelEditData_timelog_grid(\'' + row + '\', \'' + origData + '\');updateTableWidth(\'#timelog-grid\');return false;"><i class="fas fa-ban"></i></a>';
+                                }
+
+                                if (row.CanDelete) {
+                                    html += '<a href="#" class="btn btn-default" title="@T("Admin.Common.Delete")" onclick="table_deletedata_timelog_grid(\'' + data + '\');return false;"><i class="far fa-trash-can"></i></a>';
+                                }
+
+                                return html;
+                            }
+
+                            $(function () {
+                                //CHANGE REQUEST (post-TT-005/AC-4): autosave-on-blur removed per user
+                                //feedback - a row only saves when the user explicitly clicks the Update
+                                //(checkmark) button, same as the framework's stock edit flow. The
+                                //wireAutosaveOnBlur helper still exists in timelog-grid.js (unused) in case
+                                //this needs to be restored later.
+
+                                //ENH-003: enforce HH:mm as-you-type (not just on blur) for the Add Time
+                                //Entry field and every grid row's Time cell once it's put into edit mode
+                                timeLogGrid.wireTimeInputMask(document, '#addTimeDisplay');
+                                timeLogGrid.wireTimeInputMask('#timelog-grid', 'td[data-columnname="TimeDisplay"] input.userinput');
+
+                                //enable/disable the bulk Submit button based on current checkbox selection
+                                $('#timelog-grid').on('change', 'input.checkboxGroups, input.mastercheckbox', function () {
+                                    $('#submit-selected').prop('disabled', selectedIds.length === 0);
+                                });
+
+                                $('#addDate').val(new Date().toISOString().substring(0, 10));
+
+                                //ENH-004: field name (server) -> the Add Time Entry panel's own input selector
+                                var addFormFieldMap = {
+                                    ProjectId: '#addProjectId',
+                                    Task: '#addTask',
+                                    Date: '#addDate',
+                                    Time: '#addTimeDisplay',
+                                    TimeDisplay: '#addTimeDisplay'
+                                };
+
+                                $('#addTimeLog').click(function () {
+                                    $('#addTimeLog').attr('disabled', true);
+                                    timeLogGrid.clearFieldErrors($('#addTimeLog').closest('.search-body'));
+
+                                    var postData = {
+                                        ProjectId: $('#addProjectId').val(),
+                                        Task: $('#addTask').val(),
+                                        Description: $('#addDescription').val(),
+                                        Date: $('#addDate').val(),
+                                        TimeDisplay: $('#addTimeDisplay').val()
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'POST',
+                                        url: '@Url.Action("TimeLogInsert", "TimeLog")',
+                                        data: postData,
+                                        success: function (data) {
+                                            if (data && data.fieldErrors) {
+                                                //ENH-004: field-keyed errors - highlight each specific input,
+                                                //no alert/toast for this case
+                                                timeLogGrid.applyFieldErrors($('#addTimeLog').closest('.search-body'), addFormFieldMap, data.fieldErrors);
+                                                return;
+                                            }
+                                            if (data) {
+                                                display_nop_error(data);
+                                            }
+                                            updateTable('#timelog-grid');
+                                            $('#addTask').val('');
+                                            $('#addDescription').val('');
+                                            $('#addTimeDisplay').val('');
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            alert(errorThrown);
+                                        },
+                                        complete: function () {
+                                            $('#addTimeLog').attr('disabled', false);
+                                        }
+                                    });
+                                });
+
+                                $('#submit-selected').click(function () {
+                                    if (!selectedIds || selectedIds.length === 0) {
+                                        return false;
+                                    }
+
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'POST',
+                                        url: '@Url.Action("TimeLogSubmit", "TimeLog")',
+                                        data: postData,
+                                        traditional: true,
+                                        success: function (data) {
+                                            //BUG-002/AC-9.3: surface each failed row's ErrorMessage - the
+                                            //response's per-id `results` array was previously never read
+                                            if (data && data.results) {
+                                                var failures = $.grep(data.results, function (r) { return !r.Success; });
+
+                                                if (failures.length > 0) {
+                                                    var message = "The following errors have occurred:";
+                                                    $.each(failures, function (key, r) {
+                                                        message += "\n" + r.ErrorMessage;
+                                                    });
+                                                    display_nop_error({ error: message });
+                                                }
+                                            }
+
+                                            updateTable('#timelog-grid');
+                                            selectedIds = [];
+                                            $('#submit-selected').prop('disabled', true);
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            alert(errorThrown);
+                                        }
+                                    });
+
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

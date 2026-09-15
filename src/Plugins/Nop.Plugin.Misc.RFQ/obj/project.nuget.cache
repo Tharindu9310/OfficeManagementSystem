@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UvQ09WsDuDw=",
+  "dgSpecHash": "kogKEb6hMf8=",
   "success": true,
-  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagementSystems\\src\\Plugins\\Nop.Plugin.Misc.RFQ\\Nop.Plugin.Misc.RFQ.csproj",
+  "projectFilePath": "C:\\Tharindu\\Project\\OfficeManagement\\src\\Plugins\\Nop.Plugin.Misc.RFQ\\Nop.Plugin.Misc.RFQ.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tharindu\\.nuget\\packages\\advancedstringbuilder\\0.1.1\\advancedstringbuilder.0.1.1.nupkg.sha512",
     "C:\\Users\\Tharindu\\.nuget\\packages\\autofac\\8.1.0\\autofac.8.1.0.nupkg.sha512",

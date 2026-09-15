@@ -1,0 +1,87 @@
+@model ProjectModel
+
+@*
+    T-020/TT-036 - staff dual-listbox partial. No existing exact dual-listbox pattern exists in this
+    codebase (design §4.2 verified finding) - this mirrors the wire-format convention of the
+    checkbox/select2 multi-select pattern used elsewhere (e.g. Category "restrict to customer roles"
+    / store mapping above): two plain <select multiple> boxes with jQuery move buttons, posting the
+    "assigned" side as List<int> SelectedCustomerIds - the same List<int> wire format nopCommerce
+    already uses for multi-selects, not an invented one.
+
+    Accessibility (WCAG 2.1 AA, design §4.6): real <button> elements (not div onclick), keyboard
+    operable (Enter/Space triggers the click handler natively on a <button>), aria-labels describing
+    the move direction, native <select multiple> semantics retained for screen readers.
+*@
+
+<div class="row">
+    <div class="col-md-5">
+        <label for="available-staff-select">@T("Admin.TimeLog.Project.Fields.AvailableStaff")</label>
+        <select multiple="multiple" id="available-staff-select" class="form-control" size="10" aria-label="@T("Admin.TimeLog.Project.Fields.AvailableStaff").Text">
+            @foreach (var item in Model.AvailableStaff)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
+        <button type="button" id="staff-move-right" class="btn btn-primary mb-2" style="width:100%"
+                aria-label="@T("Admin.TimeLog.Project.Fields.MoveToAssigned").Text">
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+            @T("Admin.TimeLog.Project.Fields.MoveToAssigned")
+        </button>
+        <button type="button" id="staff-move-left" class="btn btn-secondary" style="width:100%"
+                aria-label="@T("Admin.TimeLog.Project.Fields.MoveToAvailable").Text">
+            <i class="fas fa-angle-left" aria-hidden="true"></i>
+            @T("Admin.TimeLog.Project.Fields.MoveToAvailable")
+        </button>
+    </div>
+    <div class="col-md-5">
+        <label for="assigned-staff-select">@T("Admin.TimeLog.Project.Fields.AssignedStaff")</label>
+        <select multiple="multiple" name="@Html.NameFor(m => m.SelectedCustomerIds)" id="assigned-staff-select" class="form-control" size="10" aria-label="@T("Admin.TimeLog.Project.Fields.AssignedStaff").Text">
+            @foreach (var item in Model.AssignedStaff)
+            {
+                <option value="@item.Value" selected="selected">@item.Text</option>
+            }
+        </select>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        function moveSelectedOptions(fromSelectId, toSelectId) {
+            var $from = $(fromSelectId);
+            var $to = $(toSelectId);
+
+            $from.find('option:selected').each(function () {
+                $(this).prop('selected', false).appendTo($to);
+            });
+        }
+
+        $('#staff-move-right').on('click', function () {
+            moveSelectedOptions('#available-staff-select', '#assigned-staff-select');
+        });
+
+        $('#staff-move-left').on('click', function () {
+            moveSelectedOptions('#assigned-staff-select', '#available-staff-select');
+        });
+
+        //double-click an option to move it - a convenience on top of, not a replacement for, the
+        //keyboard-operable buttons above
+        $('#available-staff-select').on('dblclick', 'option', function () {
+            $(this).prop('selected', true);
+            moveSelectedOptions('#available-staff-select', '#assigned-staff-select');
+        });
+
+        $('#assigned-staff-select').on('dblclick', 'option', function () {
+            $(this).prop('selected', true);
+            moveSelectedOptions('#assigned-staff-select', '#available-staff-select');
+        });
+
+        //the assigned select is the only one posted back (SelectedCustomerIds) - every option in it
+        //must be marked selected right before submit, since an unselected <option> in a posted
+        //multi-select is not included in the form data at all
+        $('#project-form').on('submit', function () {
+            $('#assigned-staff-select option').prop('selected', true);
+        });
+    });
+</script>

@@ -1,0 +1,11 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "Time Log",
+  "SystemName": "Misc.TimeLog",
+  "Version": "1.1",
+  "SupportedVersions": ["4.90"],
+  "Author": "OfficeManagement Team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.TimeLog.dll",
+  "Description": "Staff self-service time logging with manager oversight (Draft/Submitted workflow), plus Phase 2 Project management (Project Manager role, staff assignment, and status-driven time-logging eligibility)."
+}
