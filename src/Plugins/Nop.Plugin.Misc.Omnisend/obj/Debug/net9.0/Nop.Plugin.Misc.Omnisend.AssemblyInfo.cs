@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright © Nop Solutions, Ltd")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5073ca2f344f83ed36fb63eedc02b76ff97d3112")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fdce859286f2168a0ae1790c160073f28dfc1198")]
 [assembly: System.Reflection.AssemblyProductAttribute("Nop.Plugin.Misc.Omnisend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Nop.Plugin.Misc.Omnisend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

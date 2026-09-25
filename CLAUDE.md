@@ -9,6 +9,7 @@ This file is read automatically by Claude Code at the start of every session in 
 - Only work within the given scope.
 - Follow existing project patterns and conventions - nopCommerce's own architecture, not generic ASP.NET Core assumptions.
 - **File Creation Rule (MANDATORY):** Any file a subagent produces (documents or code) MUST actually be written to disk with the Write/Edit tool at the stated path relative to the repo root. Returning file content as chat text only does not save it to the project. Re-read the file after writing to confirm it landed before reporting a step complete.
+- **Permission scoping note:** `.claude/settings.local.json` grants `Bash(mkdir -p *)` and `additionalDirectories` covering the whole `docs/` tree, not just one feature's folder - this was fixed after an earlier bug where only `docs/time-log`'s exact mkdir command was pre-approved, silently blocking phase 2's folder creation since it needed a different path. If you ever see permission approval prompts for something under `docs/`, that's unexpected given this config - flag it rather than assuming it's normal.
 
 ## Coding Expectations
 - Write clean, maintainable, production-ready code.
@@ -91,13 +92,20 @@ Claude delegates to these automatically based on their `description`, or you can
 
 **Skills** (`.claude/skills/`) - deeper how-to playbooks behind each subagent's work. Loaded automatically when relevant.
 
-**The shared ticket file** - `docs/{feature-name}/tickets/tickets.md` is the primary work-item log for a feature, created by `nopcommerce-ticket-manager` and read/updated by every subagent from the implementation planner onward. Azure DevOps sync (via the `smart-mcp` MCP server) is optional and additive, not required.
+**The shared ticket file** - `docs/{feature-name}/tickets/tickets.md` is the primary work-item log for a feature, created by `nopcommerce-ticket-manager` and read/updated by every subagent from the implementation planner onward. Jira sync (via the `mcp-atlassian` MCP server) is optional and additive, not required.
 
-**Requirement intake file** - instead of typing a requirement inline, fill in `docs/intake/requirement.md` (see `docs/intake/README.md`) and run `/nopcommerce-workflow` with no arguments.
+**Intake files** - three templates in `docs/intake/` (see `docs/intake/README.md`), checked in this order when you run `/nopcommerce-workflow` with no arguments:
+- `requirement.md` - new feature, or a new phase of an existing one (full pipeline, creates a new `docs/{feature-name}/` folder)
+- `bug.md` - something already built is broken (lightweight: one new Bug ticket added to the existing feature folder's `tickets.md`, no new folder, no new design cycle)
+- `change.md` - something already built should behave differently (same lightweight path as a bug, for deliberate scoped changes rather than defects)
 
-**Full pipeline** - run `/nopcommerce-workflow` to drive the canonical BA -> SA -> Tickets -> Plan -> Dev -> QA sequence with gates. No dedicated validation-gate subagent in this streamlined roster - do a quick self-check against each agent's own Definition of Done instead.
+**Multi-phase features** - phase folders are named `{base-feature-name}-phaseN` (suffix form, e.g. `time-log-phase2`), matching this project's actual convention. The BA agent detects a phase from context (title, "builds on" language, an existing matching `docs/` folder) - you don't strictly need to fill in the intake file's `## Phase` field, though doing so removes ambiguity. Each phase reads the immediately preceding phase's folder before writing anything, and documents Do NOT restate/contradict what a prior phase already settled.
 
-**MCP** - `smart-mcp` (Azure DevOps tools, plus Confluence if you want it) is configured in `.mcp.json`, pointing at `.claude/mcp-servers/ai-mcp-server/`. See that folder's README for setup.
+**Bugs and changes stay inside their target folder** - `bug.md`/`change.md` both require a `## Target Feature Folder` naming an EXISTING `docs/` folder. Neither creates a new phase - the resulting ticket lands in that folder's `tickets.md` (continuing its existing ticket numbering), and `nopcommerce-developer`/`nopcommerce-qa-tester` pick it up like any other ticket via `ticket-id`. This skips technical design and implementation planning entirely, since the plugin/design those would produce already exists.
+
+**Full pipeline** - run `/nopcommerce-workflow` to drive the canonical BA -> SA -> Tickets -> Plan -> Dev -> QA sequence with gates (requirement/phase path), or the shorter Bug/Change sequence (bug/change path). No dedicated validation-gate subagent in this streamlined roster - do a quick self-check against each agent's own Definition of Done instead.
+
+**MCP** - `mcp-atlassian` (Jira, and Confluence if you enable it) is configured in `.mcp.json`, run via `uvx mcp-atlassian`. Requires `uv` installed (`irm https://astral.sh/uv/install.ps1 | iex` on Windows) and three env vars in `.mcp.json`'s `env` block: `JIRA_URL`, `JIRA_USERNAME`, `JIRA_API_TOKEN` (generate the token at https://id.atlassian.com/manage-profile/security/api-tokens). Verify with `claude mcp list` - should show `mcp-atlassian` as `✔ Connected`. If you ever edit `.mcp.json`, you must fully restart the Claude Code session (`/exit` then `claude` again) - MCP servers load once at session start and won't pick up mid-session config changes.
 
 ## Detailed Standards Reference
 

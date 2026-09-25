@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "mcp-atlassian": {
+     "command": "uvx",
+      "args": ["mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "https://tharindu1028.atlassian.net",
+        "JIRA_USERNAME": "tharindu1028@gmail.com",
+        "JIRA_API_TOKEN": "ATATT3xFfGF0Nc7fnJaUjDa1X_QuX7jg5YbMH3rKpLWss8OkFVmoSOWSbVmivOdZjDMDo51vuuoLxAgy_cAsvJhu_oBtpj_-a2A5A76B1ChuAPfFUYpUy07wL0JHMjkJCsApemzSe_7mZO_JGeJzO46uLvApawU6SFCWsb1A-3FcbVeVcI35ACc=648C7D11"
+      }
+    }
+  }
+}
