@@ -1,0 +1,11 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "Expenses",
+  "SystemName": "Misc.Expenses",
+  "Version": "1.0",
+  "SupportedVersions": ["4.90"],
+  "Author": "OfficeManagement Team",
+  "DisplayOrder": 2,
+  "FileName": "Nop.Plugin.Misc.Expenses.dll",
+  "Description": "Expense management for the admin area. Phase 1 adds an Expenses menu with an Expense Category page: a searchable grid with per-store availability, per-language names, an optional per-month limit and an Expense or Income type."
+}

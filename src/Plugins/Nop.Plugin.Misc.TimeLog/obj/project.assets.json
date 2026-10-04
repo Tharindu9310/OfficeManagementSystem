@@ -12746,11 +12746,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Tharindu\\Project\\OfficeManagement\\src\\Plugins\\Nop.Plugin.Misc.TimeLog\\Nop.Plugin.Misc.TimeLog.csproj",
+      "projectUniqueName": "c:\\Tharindu\\Project\\OfficeManagement\\src\\Plugins\\Nop.Plugin.Misc.TimeLog\\Nop.Plugin.Misc.TimeLog.csproj",
       "projectName": "Nop.Plugin.Misc.TimeLog",
-      "projectPath": "C:\\Tharindu\\Project\\OfficeManagement\\src\\Plugins\\Nop.Plugin.Misc.TimeLog\\Nop.Plugin.Misc.TimeLog.csproj",
+      "projectPath": "c:\\Tharindu\\Project\\OfficeManagement\\src\\Plugins\\Nop.Plugin.Misc.TimeLog\\Nop.Plugin.Misc.TimeLog.csproj",
       "packagesPath": "C:\\Users\\Tharindu\\.nuget\\packages\\",
-      "outputPath": "C:\\Tharindu\\Project\\OfficeManagement\\src\\Plugins\\Nop.Plugin.Misc.TimeLog\\obj\\",
+      "outputPath": "c:\\Tharindu\\Project\\OfficeManagement\\src\\Plugins\\Nop.Plugin.Misc.TimeLog\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

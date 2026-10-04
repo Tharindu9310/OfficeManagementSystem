@@ -6,6 +6,10 @@
     {
       "SystemName": "Misc.TimeLog",
       "Version": "1.1"
+    },
+    {
+      "SystemName": "Misc.Expenses",
+      "Version": "1.0"
     }
   ],
   "PluginNamesToUninstall": [],

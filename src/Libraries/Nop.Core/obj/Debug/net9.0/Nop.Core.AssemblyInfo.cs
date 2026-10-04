@@ -18,7 +18,7 @@ using System.Reflection;
     "ing, events, helpers, and business objects (for example, Order and Customer enti" +
     "ties).")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("4.90.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("4.90+fdce859286f2168a0ae1790c160073f28dfc1198")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("4.90+85243dce9652d0183b5c2e89f8b5576f45efa470")]
 [assembly: System.Reflection.AssemblyProductAttribute("Nop.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Nop.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("4.90.0.0")]

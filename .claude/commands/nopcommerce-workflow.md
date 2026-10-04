@@ -26,6 +26,8 @@ If found and complete, this is a new-feature-or-phase run - proceed to the **Can
 
 **C. Bug or change intake file** - if `requirement.md` isn't present/complete, check `docs/intake/bug.md` and `docs/intake/change.md` (in that order - if both are present and unprocessed, handle `bug.md` first and tell the user `change.md` is still pending). Either indicates a **lightweight run** - proceed to the **Bug/Change Sequence** below instead of the full canonical one.
 
+**D. Existing Jira issue** - if the user's request names a Jira key directly (e.g. `jira-key=OM-15`, or natural language like "start development on OM-15" / "build the story in OM-20"), this is a **Jira-sourced run** - proceed to the **Canonical Sequence** below, but Step 1 uses `nopcommerce-requirement-analyzer`'s Jira-Sourced Intake path instead of reading a local file, and `nopcommerce-ticket-manager` (Step 3) uses its Path D (link, don't create) instead of Path A. Ask for the target nopCommerce version if not inferable, same as any other source - never assume it.
+
 **After successfully reading from any source:**
 - For A/B: confirm both a requirement and a version were captured.
 - For C: confirm the `## Target Feature Folder` field is filled in AND that `docs/{that-folder}/` actually exists - if either fails, stop and ask rather than guessing.
@@ -39,7 +41,7 @@ If none of the three sources yields valid input, stop immediately and show this:
 ```markdown
 [INVALID INPUT FORMAT DETECTED]
 
-This command needs one of: an inline requirement, docs/intake/requirement.md, docs/intake/bug.md, or docs/intake/change.md.
+This command needs one of: an inline requirement, docs/intake/requirement.md, docs/intake/bug.md, docs/intake/change.md, or an existing Jira issue key.
 
 **What You Provided:**
 {paste the user's actual input, or note which intake files were checked and why each failed}
@@ -53,8 +55,11 @@ Fill in docs/intake/requirement.md, then re-run /nopcommerce-workflow with no ar
 **Option C - bug or change to something already built:**
 Fill in docs/intake/bug.md or docs/intake/change.md (both require an existing Target Feature Folder), then re-run /nopcommerce-workflow with no arguments.
 
+**Option D - work already planned in Jira:**
+Name the Jira issue key directly, e.g. "start development on OM-15" or jira-key=OM-15 nopcommerce-version=4.90.8.
+
 **Action Required:**
-Resubmit with the correct inline format, or fill in the relevant intake file and try again.
+Resubmit with the correct inline format, name a Jira issue, or fill in the relevant intake file and try again.
 ```
 
 Do not guess a version, target folder, or intake type - proceed only once the source is genuinely valid.
@@ -65,9 +70,9 @@ Do not guess a version, target folder, or intake type - proceed only once the so
 
 Work through these steps in order. After each step, briefly summarize the output before continuing. For steps flagged **[hard gate]**, do not proceed without explicit user approval.
 
-1. **Delegate to `nopcommerce-requirement-analyzer`** with the requirement and version. Produces `docs/{feature-name}/requirements/`, `stories/`, `acceptance-criteria/`. If this is a detected phase 2+ (see that agent's Multi-Phase Initiatives section), it reads the prior phase's folder first and names this one `{base-feature-name}-phaseN`.
+1. **Delegate to `nopcommerce-requirement-analyzer`** with the requirement and version (or, for source D, the Jira issue key - it fetches the issue itself via its Jira-Sourced Intake path). Produces `docs/{feature-name}/requirements/`, `stories/`, `acceptance-criteria/`. If this is a detected phase 2+ (see that agent's Multi-Phase Initiatives section), it reads the prior phase's folder first and names this one `{base-feature-name}-phaseN`. For source D, `clarified-requirement.md` records a `Source Jira Issue: {KEY}` line that Step 3 depends on.
 2. **Delegate to `nopcommerce-technical-designer`** with the requirement-analyzer's outputs. Produces `docs/{feature-name}/design/technical-design.md`, including the Placement Decision. **[hard gate]** - if the Placement Decision is "genuine core modification," explicitly flag this to the user and confirm they want to proceed before continuing.
-3. **Delegate to `nopcommerce-ticket-manager`**: Produces `docs/{feature-name}/tickets/tickets.md`.
+3. **Delegate to `nopcommerce-ticket-manager`**: Produces `docs/{feature-name}/tickets/tickets.md`. For source D, uses its Path D (link to the existing Jira issue) instead of Path A (create new) - no duplicate Jira issue gets created.
 4. **Delegate to `nopcommerce-implementation-planner`** with the design and `tickets.md`. Produces `docs/{feature-name}/plan/implementation-plan.md` and extends `tickets.md` with Task-level entries.
 5. **[hard gate] Plan Approval** - show the user the task list from `tickets.md` and ask Yes/No/Revise before any code is written. Do not proceed on anything but explicit Yes.
 6. **Delegate to `nopcommerce-developer`** - one delegation per ticket (backend and UI together, since this agent handles both), passing `ticket-id` so it updates its own ticket's Status in `tickets.md` as it works.

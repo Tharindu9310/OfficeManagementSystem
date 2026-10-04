@@ -92,7 +92,7 @@ Claude delegates to these automatically based on their `description`, or you can
 
 **Skills** (`.claude/skills/`) - deeper how-to playbooks behind each subagent's work. Loaded automatically when relevant.
 
-**The shared ticket file** - `docs/{feature-name}/tickets/tickets.md` is the primary work-item log for a feature, created by `nopcommerce-ticket-manager` and read/updated by every subagent from the implementation planner onward. Jira sync (via the `mcp-atlassian` MCP server).
+**The shared ticket file** - `docs/{feature-name}/tickets/tickets.md` is the primary work-item log for a feature, created by `nopcommerce-ticket-manager` and read/updated by every subagent from the implementation planner onward. Jira sync (via the `mcp-atlassian` MCP server) is also required.
 
 **Intake files** - three templates in `docs/intake/` (see `docs/intake/README.md`), checked in this order when you run `/nopcommerce-workflow` with no arguments:
 - `requirement.md` - new feature, or a new phase of an existing one (full pipeline, creates a new `docs/{feature-name}/` folder)
@@ -102,6 +102,8 @@ Claude delegates to these automatically based on their `description`, or you can
 **Multi-phase features** - phase folders are named `{base-feature-name}-phaseN` (suffix form, e.g. `time-log-phase2`), matching this project's actual convention. The BA agent detects a phase from context (title, "builds on" language, an existing matching `docs/` folder) - you don't strictly need to fill in the intake file's `## Phase` field, though doing so removes ambiguity. Each phase reads the immediately preceding phase's folder before writing anything, and documents Do NOT restate/contradict what a prior phase already settled.
 
 **Bugs and changes stay inside their target folder** - `bug.md`/`change.md` both require a `## Target Feature Folder` naming an EXISTING `docs/` folder. Neither creates a new phase - the resulting ticket lands in that folder's `tickets.md` (continuing its existing ticket numbering), and `nopcommerce-developer`/`nopcommerce-qa-tester` pick it up like any other ticket via `ticket-id`. This skips technical design and implementation planning entirely, since the plugin/design those would produce already exists.
+
+**Starting from an existing Jira Epic/Story** - if an Epic and Story were already created directly in Jira (not through this pipeline), just name the issue key: "start development on OM-15". `nopcommerce-requirement-analyzer` fetches it via `mcp-atlassian`, treats its summary/description as the requirement, and records `Source Jira Issue: {KEY}` in `clarified-requirement.md`. This single line is what tells `nopcommerce-ticket-manager` to LINK the local ticket to the existing Jira issue instead of creating a duplicate - everything else (design, planning, dev, QA) proceeds exactly as normal from there. Expect more clarifying questions than usual, since Jira descriptions are typically less detailed than a proper `requirement.md`.
 
 **Full pipeline** - run `/nopcommerce-workflow` to drive the canonical BA -> SA -> Tickets -> Plan -> Dev -> QA sequence with gates (requirement/phase path), or the shorter Bug/Change sequence (bug/change path). No dedicated validation-gate subagent in this streamlined roster - do a quick self-check against each agent's own Definition of Done instead.
 

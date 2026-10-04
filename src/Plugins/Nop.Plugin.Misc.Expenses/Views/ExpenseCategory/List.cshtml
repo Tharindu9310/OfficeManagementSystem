@@ -1,0 +1,254 @@
+@model ExpenseCategorySearchModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Admin.Expenses.ExpenseCategory.PageTitle").Text;
+    NopHtml.SetActiveMenuItemSystemName(NopExpensesDefaults.ExpenseCategoryAdminMenuSystemName);
+
+    var storesAllText = System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Expenses.ExpenseCategory.List.Stores.All").Text);
+    var storesLimitedText = System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Expenses.ExpenseCategory.List.Stores.Limited").Text);
+    var editStoresText = System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Expenses.ExpenseCategory.List.EditStoresAndTranslations").Text);
+    var decimalSeparator = System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+
+    NopHtml.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Misc.Expenses/Content/expensecategory-grid.js");
+
+    //the collapse click on a ".search-row" posts its data-hideAttribute name to Preferences/SavePreference,
+    //which rejects an empty name, so every collapsible panel needs one
+    //(the names live in NopExpensesDefaults so uninstall can remove the saved rows by the shared prefix)
+    const string hideSearchBlockAttributeName = NopExpensesDefaults.HideSearchBlockAttributeName;
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+
+    const string hideAddPanelAttributeName = NopExpensesDefaults.HideAddPanelAttributeName;
+    var hideAddPanel = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAddPanelAttributeName);
+
+    var typeEnum = typeof(Nop.Plugin.Misc.Expenses.Domain.ExpenseCategoryType);
+}
+
+@*
+    Expense Category list: search panel and read-only grid (paging, name and store filters).
+    The page size is clamped to NopExpensesDefaults.MaxPageSize server-side in
+    ExpenseCategoryController.ExpenseCategoryList. There is no delete action or UI.
+*@
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Expenses.ExpenseCategory.PageTitle")
+    </h1>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body" @(!hideSearchBlock ? null : Html.Raw("style=\"display:none\""))>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchName" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchStoreId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-expensecategories" class="btn btn-primary btn-search">
+                                        <i class="fas fa-search" aria-hidden="true"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideAddPanel ? "opened" : "")" data-hideAttribute="@hideAddPanelAttributeName">
+                            <div class="search-text">@T("Admin.Expenses.ExpenseCategory.List.AddNew")</div>
+                            <div class="icon-search"><i class="fas fa-plus" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideAddPanel ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body" id="expensecategory-add-panel"
+                             data-insert-url="@Url.Action("ExpenseCategoryInsert", "ExpenseCategory")"
+                             data-added-text="@T("Admin.Expenses.ExpenseCategory.Added")"
+                             @(!hideAddPanel ? null : Html.Raw("style=\"display:none\""))>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="col-form-label" for="addName">@T("Admin.Expenses.ExpenseCategory.Fields.Name")</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group input-group-required">
+                                        <input type="text" id="addName" class="form-control" maxlength="@NopExpensesDefaults.NameMaxLength"
+                                               autocomplete="off" aria-required="true" aria-describedby="addName-error" />
+                                        <div class="input-group-btn">
+                                            <nop-required />
+                                        </div>
+                                    </div>
+                                    <div class="field-validation-error text-danger" id="addName-error" role="alert"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="col-form-label" for="addPerMonthLimit">@T("Admin.Expenses.ExpenseCategory.Fields.PerMonthLimit")</label>
+                                </div>
+                                <div class="col-md-9">
+                                    @*plain text so a non-numeric entry reaches the server and gets the localized field error*@
+                                    <input type="text" id="addPerMonthLimit" class="form-control" inputmode="decimal"
+                                           autocomplete="off" aria-describedby="addPerMonthLimit-error" />
+                                    <div class="field-validation-error text-danger" id="addPerMonthLimit-error" role="alert"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="col-form-label" for="addType">@T("Admin.Expenses.ExpenseCategory.Fields.Type")</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group input-group-required">
+                                        <select id="addType" class="form-control" aria-required="true" aria-describedby="addType-error">
+                                            <option value="0">@T("Admin.Expenses.ExpenseCategory.Fields.Type.Select")</option>
+                                            @foreach (var typeValue in Enum.GetValues(typeEnum))
+                                            {
+                                                <option value="@((int)typeValue)">@T($"Enums.{typeEnum.FullName}.{typeValue}")</option>
+                                            }
+                                        </select>
+                                        <div class="input-group-btn">
+                                            <nop-required />
+                                        </div>
+                                    </div>
+                                    <div class="field-validation-error text-danger" id="addType-error" role="alert"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-9 offset-md-3">
+                                    <button type="button" id="expensecategory-add-save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @*outside the collapsible Add panel so the confirmation is visible and announced even when that panel
+                          is collapsed; text-dark (not text-success, about 3.1:1) keeps the contrast well above 4.5:1*@
+                        <div id="expensecategory-status" class="text-dark" role="status" aria-live="polite"></div>
+                        <div id="expensecategory-grid-errors" class="text-danger" role="alert"
+                             data-generic-error="@T("Admin.Expenses.ExpenseCategory.Error.Generic")"></div>
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "expensecategory-grid",
+                            UrlRead = new DataUrl("ExpenseCategoryList", "ExpenseCategory", null),
+                            UrlUpdate = new DataUrl("ExpenseCategoryUpdate", "ExpenseCategory", null),
+                            SearchButtonId = "search-expensecategories",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new(nameof(Model.SearchName)),
+                                new(nameof(Model.SearchStoreId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new(nameof(ExpenseCategoryModel.Name))
+                                {
+                                    Title = T("Admin.Expenses.ExpenseCategory.List.Name").Text,
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                //edited as the raw value; the cell shows PerMonthLimitDisplay (empty when null, never 0)
+                                new(nameof(ExpenseCategoryModel.PerMonthLimit))
+                                {
+                                    Title = T("Admin.Expenses.ExpenseCategory.List.PerMonthLimit").Text,
+                                    Width = "160",
+                                    ClassName = "text-right",
+                                    Render = new RenderCustom("renderExpenseCategoryLimitColumn"),
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                //never Editable: the type is fixed after creation
+                                new(nameof(ExpenseCategoryModel.ExpenseCategoryTypeName))
+                                {
+                                    Title = T("Admin.Expenses.ExpenseCategory.List.Type").Text,
+                                    Width = "160",
+                                    Render = new RenderCustom("renderExpenseCategoryTypeColumn")
+                                },
+                                new(nameof(ExpenseCategoryModel.LimitedToStores))
+                                {
+                                    Title = T("Admin.Expenses.ExpenseCategory.List.Stores").Text,
+                                    Width = "220",
+                                    Render = new RenderCustom("renderExpenseCategoryStoresColumn")
+                                },
+                                //opens the stores and translations modal (the same Id data, a separate cell)
+                                new(nameof(ExpenseCategoryModel.Id))
+                                {
+                                    Title = T("Admin.Expenses.ExpenseCategory.List.EditStoresAndTranslations").Text,
+                                    Width = "220",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderExpenseCategoryStoresButtonColumn")
+                                },
+                                new(nameof(ExpenseCategoryModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                        })
+
+                        <script>
+                            //formatted limit for display; the raw value rides along in data-raw (in the admin
+                            //culture's decimal separator) so the inline edit input starts from the real number
+                            function renderExpenseCategoryLimitColumn(data, type, row, meta) {
+                                var raw = (row.PerMonthLimit === null || typeof row.PerMonthLimit === 'undefined')
+                                    ? ''
+                                    : String(row.PerMonthLimit).replace('.', '@Html.Raw(decimalSeparator)');
+                                return '<span data-raw="' + escapeHtml(raw) + '">' + escapeHtml(row.PerMonthLimitDisplay) + '</span>';
+                            }
+
+                            //localized type text; the id rides along so an inline update can send the unchanged type
+                            function renderExpenseCategoryTypeColumn(data, type, row, meta) {
+                                return '<span data-type-id="' + escapeHtml(row.ExpenseCategoryTypeId) + '">' + escapeHtml(row.ExpenseCategoryTypeName) + '</span>';
+                            }
+
+                            //"All stores" when not limited, otherwise the limited-to-selected-stores text
+                            function renderExpenseCategoryStoresColumn(data, type, row, meta) {
+                                return row.LimitedToStores ? '@Html.Raw(storesLimitedText)' : '@Html.Raw(storesAllText)';
+                            }
+
+                            //per-row button; the aria-label adds the category name so each button is distinguishable
+                            function renderExpenseCategoryStoresButtonColumn(data, type, row, meta) {
+                                var label = '@Html.Raw(editStoresText)';
+                                return '<button type="button" class="btn btn-default expensecategory-stores-btn" data-id="' + escapeHtml(row.Id) +
+                                    '" aria-haspopup="dialog" aria-label="' + escapeHtml(label + ': ' + row.Name) + '">' + escapeHtml(label) + '</button>';
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("~/Plugins/Misc.Expenses/Views/ExpenseCategory/_StoresAndTranslationsModal.cshtml")

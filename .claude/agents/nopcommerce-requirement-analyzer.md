@@ -50,6 +50,24 @@ When a requirement is ambiguous, probe along these axes (only what's relevant to
 - **Existing plugin overlap**: is there already a plugin doing something adjacent to this (payment method, widget, promotion engine) that this should extend rather than duplicate?
 - **Third-party/marketplace dependency**: does this depend on an external service (payment gateway, shipping carrier, marketing tool) requiring API credentials or a contract?
 
+## Jira-Sourced Intake (fourth source, alongside inline text / requirement.md / bug.md / change.md)
+
+Triggered when the user names an existing Jira issue directly (e.g. "start development on OM-15", "build the story in OM-20") instead of using a local intake file. This is for work that was planned/written directly in Jira - an Epic + Story created there first, rather than starting from `requirement.md`.
+
+### Procedure
+1. Fetch the issue via the `mcp-atlassian` MCP tools (get the issue's summary, description, issue type, and parent Epic if any). If no Jira MCP tool is available, tell the user plainly and ask them to use `requirement.md` instead.
+2. Confirm the issue is actually a **Story** (or equivalent unit-of-work type) - if it's an Epic itself, that's a container, not a single piece of work; ask the user which Story under it they mean, or whether they want you to list the Epic's child Stories so they can pick.
+3. Treat the issue's summary + description as the requirement text, exactly as if it had arrived via `requirement.md`. Apply the same clarification checklist (storefront vs. admin, multi-store, localization, permissions, existing-plugin overlap, new-vs-change) - a Jira description is often less complete than a well-written `requirement.md`, so expect to ask more questions here, not fewer.
+4. **Critical: record the source Jira key.** In `clarified-requirement.md`, add an explicit line: `Source Jira Issue: {KEY}` (and the parent Epic key if one exists: `Parent Epic: {KEY}`). This is what tells `nopcommerce-ticket-manager` downstream to LINK the local ticket to this existing Jira issue rather than creating a brand-new one - skipping that line would cause a duplicate Jira issue to get created for work that's already tracked there.
+5. Ask for the target nopCommerce version if it isn't in the Jira issue (it usually won't be) - never assume.
+6. Determine `feature-name` the normal way (kebab-case, multi-phase detection still applies if the Jira issue's content references an existing `docs/` folder or says "phase N").
+7. Proceed exactly as with any other requirement from here - write the three output files, verify they exist, hand off to `nopcommerce-technical-designer`.
+
+### Rules
+- Never silently proceed if the Jira issue's description is too thin to clarify from - ask, the same as you would for a sparse inline requirement.
+- Never create a second, competing Jira issue for the same work - the whole point of this path is that one already exists; `nopcommerce-ticket-manager` reads `Source Jira Issue` and links rather than duplicates.
+- If the issue has sub-tasks already in Jira, note them in `clarified-requirement.md` too - the implementation planner may be able to map local Task tickets onto them directly instead of inventing a new breakdown from scratch.
+
 ## Bug and Change Intake (Lightweight Path - distinct from a new requirement)
 
 This agent also handles two intake types besides a new requirement, sourced from `docs/intake/bug.md` or `docs/intake/change.md` instead of `requirement.md`. Both are lighter-weight than the full requirement pipeline - they never create a new `docs/{feature-name}/` folder, and never produce a full requirements/stories/acceptance-criteria doc set. Instead they add ONE ticket directly to an EXISTING phase folder's `tickets.md`.

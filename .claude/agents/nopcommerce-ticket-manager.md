@@ -49,7 +49,7 @@ Ticket IDs are sequential per feature: `T-001`, `T-002`, ... Never reuse or renu
 ## Workflow
 
 ### Path A - Creating New Tickets
-1. Read stories and acceptance criteria.
+1. Read stories and acceptance criteria. **Check `clarified-requirement.md` for a `Source Jira Issue: {KEY}` line first** - if present, this work originated from an existing Jira issue (via `nopcommerce-requirement-analyzer`'s Jira-Sourced Intake path), and step 4 below becomes "link," not "create." Skip ahead to Path D instead of continuing with steps 2-4 here.
 2. Generate one ticket entry per story (Type: Story), splitting into Task entries only if the implementation planner later requests it (see handoff below - the planner adds Task-level tickets once it has the design).
 3. Write/update `docs/{feature-name}/tickets/tickets.md` with the Index table and full entries.
 4. **Ask**: "Do you also want these synced to Jira?" (yes/no). If yes, ask for the **Jira Project Key** (e.g. `OM`) and, if this feature belongs under an existing Epic, the **Epic Key** (e.g. `OM-100`) - never guess either. Create the corresponding Jira issues via the connected `mcp-atlassian` MCP server:
@@ -84,6 +84,14 @@ Use this when `nopcommerce-requirement-analyzer` hands off a bug or change from 
 4. Add the new row to the Index table and the full entry below it - edit the file in place, do not regenerate the whole document.
 5. Ask the same Jira sync question as Path A if the folder's other tickets are already synced (check for existing Linked Jira IDs in the file) - if the feature is already synced to Jira, offer to sync this new one too rather than leaving it inconsistently unlinked.
 6. Report the new ticket's ID back to the calling agent so it can complete the intake-file rename step.
+
+### Path D - Linking to an Already-Existing Jira Issue (no new issue created)
+Use this when `clarified-requirement.md` contains a `Source Jira Issue: {KEY}` line - meaning the work started as an Epic + Story already created directly in Jira, not through this pipeline's own creation flow.
+
+1. Create the local ticket entry exactly as in Path A steps 2-3 (one Story-type ticket in `tickets.md`), but set **Linked Jira ID** immediately to the given `{KEY}` - do NOT create a new Jira issue for it. If a `Parent Epic` key was also recorded, note it in the ticket's **Notes** field for traceability.
+2. Do NOT ask the "sync to Jira?" question from Path A step 4 - this ticket is already synced by definition, since it's linked to a pre-existing issue.
+3. If `nopcommerce-implementation-planner` later breaks this into Task-level tickets, ask once whether the user wants those created as Jira Sub-tasks under `{KEY}` - if the Jira issue already has sub-tasks listed (per the requirement-analyzer's notes), offer to map local tasks onto those existing sub-tasks by key instead of creating new ones, where the scope genuinely matches.
+4. Proceed through the rest of the pipeline (planning, development, QA) exactly as normal - the only difference from Path A is that Jira already has the Epic/Story, so this path never creates one.
 
 ## Rules
 - The markdown file is always maintained, regardless of whether Jira sync happens.

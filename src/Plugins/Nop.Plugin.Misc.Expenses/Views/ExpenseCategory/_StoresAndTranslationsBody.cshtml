@@ -1,0 +1,70 @@
+@model ExpenseCategoryStoresAndTranslationsModel
+
+@*
+    Body of the "Edit stores and translations" modal, loaded by AJAX from
+    ExpenseCategoryController.EditStoresAndTranslations. Rendered without the localized-editor tab helper
+    (its tab script is page-level and not reliable in an AJAX-loaded fragment): one labelled field per
+    language is a plain list, which is also simpler for keyboard and screen reader users.
+*@
+
+<form id="expensecategory-stores-translations-form" novalidate>
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="modal-body">
+        <div id="expensecategory-stores-translations-errors" class="text-danger" role="alert"></div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label class="col-form-label" for="expensecategory-default-name">@T("Admin.Expenses.ExpenseCategory.Fields.Name")</label>
+            </div>
+            <div class="col-md-8">
+                @*reference only: no name attribute, so it is never posted; the stored name is edited inline in the grid*@
+                <input type="text" id="expensecategory-default-name" class="form-control" value="@Model.Name"
+                       readonly="readonly" aria-describedby="expensecategory-default-name-hint" />
+                <small id="expensecategory-default-name-hint" class="form-text text-muted">@T("Admin.Expenses.ExpenseCategory.StoresAndTranslations.DefaultNameHint")</small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label class="col-form-label" for="SelectedStoreIds">@T("Admin.Expenses.ExpenseCategory.Fields.SelectedStoreIds")</label>
+            </div>
+            <div class="col-md-8">
+                @*native multiple select: fully keyboard operable and announced by screen readers inside the dialog*@
+                <select id="SelectedStoreIds" name="SelectedStoreIds" class="form-control" multiple="multiple"
+                        aria-describedby="SelectedStoreIds-hint"
+                        size="@Math.Clamp(Model.AvailableStores.Count, 2, 8)">
+                    @foreach (var store in Model.AvailableStores)
+                    {
+                        <option value="@store.Value" selected="@store.Selected">@store.Text</option>
+                    }
+                </select>
+                <small id="SelectedStoreIds-hint" class="form-text text-muted">@T("Admin.Expenses.ExpenseCategory.StoresAndTranslations.StoresHint")</small>
+            </div>
+        </div>
+
+        @for (var i = 0; i < Model.Locales.Count; i++)
+        {
+            var locale = Model.Locales[i];
+            var inputId = $"expensecategory-locale-name-{locale.LanguageId}";
+
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label class="col-form-label" for="@inputId">@T("Admin.Expenses.ExpenseCategory.Fields.Locales.Name") - @locale.LanguageName</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="hidden" name="Locales[@i].LanguageId" value="@locale.LanguageId" />
+                    <input type="text" id="@inputId" name="Locales[@i].Name" class="form-control" value="@locale.Name"
+                           maxlength="@NopExpensesDefaults.NameMaxLength" autocomplete="off"
+                           aria-describedby="@inputId-error" />
+                    <div class="field-validation-error text-danger" id="@inputId-error" role="alert"></div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" id="expensecategory-stores-translations-cancel" class="btn btn-default" data-dismiss="modal">@T("Admin.Expenses.ExpenseCategory.StoresAndTranslations.Cancel")</button>
+        <button type="submit" id="expensecategory-stores-translations-save" class="btn btn-primary">@T("Admin.Expenses.ExpenseCategory.StoresAndTranslations.Save")</button>
+    </div>
+</form>
