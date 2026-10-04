@@ -92,7 +92,7 @@ Claude delegates to these automatically based on their `description`, or you can
 
 **Skills** (`.claude/skills/`) - deeper how-to playbooks behind each subagent's work. Loaded automatically when relevant.
 
-**The shared ticket file** - `docs/{feature-name}/tickets/tickets.md` is the primary work-item log for a feature, created by `nopcommerce-ticket-manager` and read/updated by every subagent from the implementation planner onward. Jira sync (via the `mcp-atlassian` MCP server) is optional and additive, not required.
+**The shared ticket file** - `docs/{feature-name}/tickets/tickets.md` is the primary work-item log for a feature, created by `nopcommerce-ticket-manager` and read/updated by every subagent from the implementation planner onward. Jira sync (via the `mcp-atlassian` MCP server).
 
 **Intake files** - three templates in `docs/intake/` (see `docs/intake/README.md`), checked in this order when you run `/nopcommerce-workflow` with no arguments:
 - `requirement.md` - new feature, or a new phase of an existing one (full pipeline, creates a new `docs/{feature-name}/` folder)
